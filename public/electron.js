@@ -85,13 +85,7 @@ autoUpdater.on('update-downloaded', (info) => {
 app.whenReady().then(() => {
   createWindow();
   // setupLocalFilesNormalizerProxy();
-  autoUpdater.setFeedURL({
-    provider: 'github',
-    owner: 'mr339',
-    repo: 'repo',
-    private: false,
-    token: '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'
-  })
+
   autoUpdater.checkForUpdatesAndNotify();
 
   app.on("activate", function () {
@@ -99,13 +93,6 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-      autoUpdater.setFeedURL({
-        provider: 'github',
-        owner: 'mr339',
-        repo: 'repo',
-        private: false,
-        token: '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'
-      })
       autoUpdater.checkForUpdatesAndNotify();
     }
   });
