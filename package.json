@@ -40,7 +40,7 @@
         "repo": "walletConnect"
       }
     ],
-    "appId": "com.github.mr339.electronupdaterexample",
+    "appId": "com.github.mr339.walletConnect",
     "productName": "My Electron App",
     "afterSign": "./notarize.js",
     "files": [
