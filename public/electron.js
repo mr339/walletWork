@@ -8,6 +8,7 @@ const { autoUpdater } = require("electron-updater");
 let mainWindow;
 
 function sendStatusToWindow(text) {
+  console.log(text, '<=======')
   mainWindow.webContents.send('message', text);
 }
 // Create the native browser window.
