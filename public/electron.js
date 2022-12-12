@@ -18,7 +18,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
-    width: 800,
+    width: 1000,
     // Set the path of an additional "preload" script that can be used to
     // communicate between node-land and browser-land.
   });
@@ -41,6 +41,7 @@ function createWindow() {
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
+  return mainWindow;
 }
 
 // Setup a local proxy to adjust the paths of requested files when loading
@@ -86,7 +87,7 @@ autoUpdater.on('update-downloaded', (info) => {
 app.whenReady().then(() => {
   createWindow();
   // setupLocalFilesNormalizerProxy();
-
+  console.log('here')
   autoUpdater.checkForUpdatesAndNotify();
 
   app.on("activate", function () {
