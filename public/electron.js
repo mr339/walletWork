@@ -2,10 +2,17 @@
 const { app, BrowserWindow, protocol } = require("electron");
 const path = require("path");
 const url = require("url");
+const { autoUpdater } = require("electron-updater");
 
+
+let mainWindow;
+
+function sendStatusToWindow(text) {
+  mainWindow.webContents.send('message', text);
+}
 // Create the native browser window.
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -20,12 +27,14 @@ function createWindow() {
   // In development, set it to localhost to allow live/hot-reloading.
   const appURL = app.isPackaged
     ? url.format({
-        pathname: path.join(__dirname, "index.html"),
-        protocol: "file:",
-        slashes: true,
-      })
+      pathname: path.join(__dirname, "index.html"),
+      protocol: "file:",
+      slashes: true,
+    })
     : "http://localhost:3000";
   mainWindow.loadURL(appURL);
+  mainWindow.webContents.openDevTools();
+
 
   // Automatically open Chrome's DevTools in development mode.
   if (!app.isPackaged) {
@@ -48,18 +57,56 @@ function createWindow() {
 //   );
 // }
 
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+  sendStatusToWindow('Update available.');
+})
+autoUpdater.on('update-not-available', (info) => {
+  sendStatusToWindow('Update not available.');
+})
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow(log_message);
+})
+autoUpdater.on('update-downloaded', (info) => {
+  sendStatusToWindow('Update downloaded');
+});
+
 // This method will be called when Electron has finished its initialization and
 // is ready to create the browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
   // setupLocalFilesNormalizerProxy();
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'mr339',
+    repo: 'repo',
+    private: false,
+    token: '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'
+  })
+  autoUpdater.checkForUpdatesAndNotify();
 
-  app.on("activate", function() {
+  app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+      autoUpdater.setFeedURL({
+        provider: 'github',
+        owner: 'mr339',
+        repo: 'repo',
+        private: false,
+        token: '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'
+      })
+      autoUpdater.checkForUpdatesAndNotify();
     }
   });
 });
@@ -67,7 +114,7 @@ app.whenReady().then(() => {
 // Quit when all windows are closed, except on macOS.
 // There, it's common for applications and their menu bar to stay active until
 // the user quits  explicitly with Cmd + Q.
-app.on("window-all-closed", function() {
+app.on("window-all-closed", function () {
   if (process.platform !== "darwin") {
     app.quit();
   }
