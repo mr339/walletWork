@@ -90,7 +90,7 @@ app.whenReady().then(() => {
     owner: 'mr339',
     repo: 'repo',
     private: false,
-    token: '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'
+    token: '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'
   })
   autoUpdater.checkForUpdatesAndNotify();
 
@@ -104,7 +104,7 @@ app.whenReady().then(() => {
         owner: 'mr339',
         repo: 'repo',
         private: false,
-        token: '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'
+        token: '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'
       })
       autoUpdater.checkForUpdatesAndNotify();
     }
