@@ -2,26 +2,37 @@
 const { app, BrowserWindow, protocol } = require("electron");
 const path = require("path");
 const url = require("url");
+const log = require('electron-log');
 const { autoUpdater } = require("electron-updater");
 
+//-------------------------------------------------------------------
+// Logging
+//
+// THIS SECTION IS NOT REQUIRED
+//
+// This logging setup is not required for auto-updates to work,
+// but it sure makes debugging easier :)
+//-------------------------------------------------------------------
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 let mainWindow;
 
 function sendStatusToWindow(text) {
-  console.log(text, '<=======')
   mainWindow.webContents.send('message', text);
 }
 // Create the native browser window.
 function createWindow() {
   mainWindow = new BrowserWindow({
-    height: 600,
     webPreferences: {
-      // preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
-    },
-    width: 1000,
-    // Set the path of an additional "preload" script that can be used to
-    // communicate between node-land and browser-land.
+      contextIsolation: false
+    }
+  });
+  mainWindow.webContents.openDevTools();
+  mainWindow.on('closed', () => {
+    mainWindow = null;
   });
 
   // In production, set the initial browser path to the local bundle generated
@@ -29,11 +40,12 @@ function createWindow() {
   // In development, set it to localhost to allow live/hot-reloading.
   const appURL = app.isPackaged
     ? url.format({
-      pathname: path.join(__dirname, "index.html"),
+      pathname: path.join(__dirname, `index.html`),
       protocol: "file:",
       slashes: true,
     })
     : "http://localhost:3000";
+  console.log(appURL, '<=======')
   mainWindow.loadURL(appURL);
   mainWindow.webContents.openDevTools();
 
@@ -88,15 +100,12 @@ autoUpdater.on('update-downloaded', (info) => {
 app.whenReady().then(() => {
   createWindow();
   // setupLocalFilesNormalizerProxy();
-  console.log('here')
-  autoUpdater.checkForUpdatesAndNotify();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-      autoUpdater.checkForUpdatesAndNotify();
     }
   });
 });
@@ -109,6 +118,57 @@ app.on("window-all-closed", function () {
     app.quit();
   }
 });
+
+//
+// CHOOSE one of the following options for Auto updates
+//
+
+//-------------------------------------------------------------------
+// Auto updates - Option 1 - Simplest version
+//
+// This will immediately download an update, then install when the
+// app quits.
+//-------------------------------------------------------------------
+
+
+app.on('ready', function () {
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'mr339',
+    repo: 'electron-updater-example',
+    token: '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',
+  });
+  autoUpdater.checkForUpdatesAndNotify();
+});
+
+//-------------------------------------------------------------------
+// Auto updates - Option 2 - More control
+//
+// For details about these events, see the Wiki:
+// https://github.com/electron-userland/electron-builder/wiki/Auto-Update#events
+//
+// The app doesn't need to listen to any events except `update-downloaded`
+//
+// Uncomment any of the below events to listen for them.  Also,
+// look in the previous section to see them being used.
+//-------------------------------------------------------------------
+// app.on('ready', function()  {
+//   autoUpdater.checkForUpdates();
+// });
+// autoUpdater.on('checking-for-update', () => {
+// })
+// autoUpdater.on('update-available', (info) => {
+// })
+// autoUpdater.on('update-not-available', (info) => {
+// })
+// autoUpdater.on('error', (err) => {
+// })
+// autoUpdater.on('download-progress', (progressObj) => {
+// })
+// autoUpdater.on('update-downloaded', (info) => {
+//   autoUpdater.quitAndInstall();  
+// })
+
 
 // If your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,
