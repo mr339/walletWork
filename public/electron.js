@@ -132,12 +132,12 @@ app.on("window-all-closed", function () {
 
 
 app.on('ready', function () {
-  autoUpdater.setFeedURL({
-    provider: 'github',
-    owner: 'mr339',
-    repo: 'walletWork',
-    token: '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',
-  });
+  // autoUpdater.setFeedURL({
+  //   provider: 'github',
+  //   owner: 'mr339',
+  //   repo: 'walletWork',
+  //   token: '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',
+  // });
   autoUpdater.checkForUpdatesAndNotify();
 });
 
