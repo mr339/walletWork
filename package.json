@@ -1,6 +1,6 @@
 {
   "name": "walletconnect-example-dapp",
-  "version": "1.7.16",
+  "version": "1.7.17",
   "private": true,
   "homepage": "./",
   "main": "./public/electron.js",
@@ -51,7 +51,7 @@
       "buildResources": "public"
     },
     "mac": {
-      "target": "dmg"
+      "category": "your.app.category.type"
     },
     "win": {
       "target": "nsis"
