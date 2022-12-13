@@ -91,7 +91,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
+  sendStatusToWindow('Update downloaded, please restart the app');
 });
 
 // This method will be called when Electron has finished its initialization and
@@ -124,12 +124,12 @@ app.on("window-all-closed", function () {
 
 
 app.on('ready', function () {
-  // autoUpdater.setFeedURL({
-  //   provider: 'github',
-  //   owner: 'mr339',
-  //   repo: 'walletWork',
-  //   token: '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',
-  // });
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'mr339',
+    repo: 'walletWork',
+    token: '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',
+  });
   autoUpdater.checkForUpdatesAndNotify();
 });
 
