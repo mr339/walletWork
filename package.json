@@ -10,7 +10,7 @@
     "web3",
     "crypto"
   ],
-  "author": "John Doe",
+  "author": "Electron test",
   "description": "My fantastic Electron app",
   "license": "MIT",
   "scripts": {
