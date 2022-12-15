@@ -20,15 +20,15 @@ log.info('App starting...');
 let mainWindow;
 
 function sendStatusToWindow(text) {
+  console.log(text);
   mainWindow.webContents.send('message', text);
 }
 // Create the native browser window.
 function createWindow() {
   mainWindow = new BrowserWindow({
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
+      preload: path.join(__dirname, 'preload.js'),
+    },
   });
   mainWindow.webContents.openDevTools();
   mainWindow.on('closed', () => {
@@ -74,12 +74,15 @@ function createWindow() {
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
+  mainWindow.webContents.send('checking-for-update', true);
 })
 autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('Update available.');
+  mainWindow.webContents.send('is-update-available', true);
 })
 autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow('Update not available.');
+  mainWindow.webContents.send('is-update-available', false);
 })
 autoUpdater.on('error', (err) => {
   sendStatusToWindow('Error in auto-updater. ' + err);
@@ -89,17 +92,17 @@ autoUpdater.on('download-progress', (progressObj) => {
   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
   sendStatusToWindow(log_message);
+  mainWindow.webContents.send('download-progress', Math.trunc(progressObj.percent));
 })
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded, please restart the app');
+  mainWindow.webContents.send('is-download-complete', true);
 });
-
 // This method will be called when Electron has finished its initialization and
 // is ready to create the browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function () {
   createWindow();
-
 });
 
 // Quit when all windows are closed, except on macOS.

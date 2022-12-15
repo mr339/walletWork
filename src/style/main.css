@@ -1,0 +1,153 @@
+*,
+body,
+html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* font-family: 'Syne'; */
+}
+
+.main-bg {
+  background: url(../assets/background.png) no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  min-width: 300px;
+  min-height: 200px;
+  max-width: 588px;
+  max-height: 256px;
+  padding: 15px 20px;
+  background: linear-gradient(105.18deg, #2a2e39 0%, #101114 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
+
+h5 {
+  font-weight: 700;
+  font-size: 24px;
+  text-align: center;
+}
+
+.logo {
+  width: 158px;
+  height: 90px;
+}
+
+.logo-small {
+  width: 98px;
+  height: 56px;
+}
+
+.login-btn {
+  width: 360px;
+  height: 60px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  text-transform: uppercase;
+  color: #14412a;
+  background: radial-gradient(
+    43.75% 43.75% at 50% 50%,
+    #39de8b 0%,
+    #0b954f 100%
+  );
+  border: 2px solid #1bd677;
+  clip-path: polygon(5% 0, 100% 0, 100% 80%, 95% 100%, 0 100%, 0 20%);
+}
+
+.login-btn:hover {
+  cursor: pointer;
+}
+
+.login-btn:active {
+  box-shadow: 0 5px #666;
+  transform: translateY(1px);
+}
+
+.container {
+  display: block;
+  position: relative;
+  height: 20px;
+  padding-left: 30px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.container p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  border: 1px solid #7a7c81;
+  border-radius: 4px;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: none;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 3px;
+  top: 1px;
+  width: 4px;
+  height: 6px;
+  border: solid #0b954f;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.update-check {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

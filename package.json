@@ -61,6 +61,7 @@
     }
   },
   "dependencies": {
+    "@ramonak/react-progress-bar": "^5.0.3",
     "@types/eth-sig-util": "^2.1.1",
     "@walletconnect/client": "^1.7.8",
     "@walletconnect/qrcode-modal": "^1.7.8",
@@ -68,8 +69,8 @@
     "bignumber.js": "^9.0.1",
     "blockies-ts": "^1.0.0",
     "electron-log": "^4.4.1",
-    "eth-sig-util": "^2.5.3",
     "electron-updater": "^4.3.9",
+    "eth-sig-util": "^2.5.3",
     "ethereumjs-util": "^7.0.6",
     "ethers": "^5.0.17",
     "node-gyp": "^8.1.0",
@@ -77,6 +78,7 @@
     "qr-image": "^3.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^6.4.5",
     "react-scripts-ts": "^4.0.8",
     "styled-components": "^5.2.0"
   },
