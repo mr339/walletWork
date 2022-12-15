@@ -1,6 +1,6 @@
 {
   "name": "walletconnect-example-dapp",
-  "version": "1.7.22",
+  "version": "1.7.23",
   "private": true,
   "homepage": "./",
   "main": "./public/electron.js",
@@ -17,7 +17,7 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "publish-mac": "yarn build && electron-builder -m -w -c.extraMetadata.main=build/electron.js -p always",
+    "publish-mac": "yarn build && electron-builder -m -c.extraMetadata.main=build/electron.js -p always",
     "publish-win": "yarn build && electron-builder -w -c.extraMetadata.main=build/electron.js -p always",
     "eject": "react-scripts-ts eject",
     "lint": "eslint -c './.eslintrc' --fix './src/**/*{.ts,.tsx}'",
