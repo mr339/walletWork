@@ -1,6 +1,6 @@
 {
   "name": "walletconnect-example-dapp",
-  "version": "1.7.24",
+  "version": "1.7.25",
   "private": true,
   "homepage": "./",
   "main": "./public/electron.js",
