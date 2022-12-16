@@ -5,7 +5,7 @@ import { createGlobalStyle } from "styled-components";
 import App from "./App";
 import { globalStyle } from "./styles";
 const GlobalStyle = createGlobalStyle`${globalStyle}`;
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 declare global {
   // tslint:disable-next-line
@@ -18,9 +18,9 @@ declare global {
 ReactDOM.render(
   <>
     <GlobalStyle />
-    <HashRouter>
+    <BrowserRouter>
       <App />
-    </HashRouter>
+    </BrowserRouter>
   </>,
   document.getElementById("root"),
 );

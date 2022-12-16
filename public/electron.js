@@ -1,9 +1,13 @@
 // Module to control the application lifecycle and the native browser window.
-const { app, BrowserWindow, protocol } = require("electron");
-const path = require("path");
-const url = require("url");
+const { app, BrowserWindow, protocol, ipcMain } = require('electron');
+const path = require('path');
+const url = require('url');
 const log = require('electron-log');
-const { autoUpdater } = require("electron-updater");
+const { autoUpdater } = require('electron-updater');
+
+process.env.ELECTRON_OWNER = 'mr339';
+process.env.ELECTRON_REPO = 'walletWork';
+process.env.ELECTRON_TOKEN = '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';
 
 //-------------------------------------------------------------------
 // Logging
@@ -20,17 +24,18 @@ log.info('App starting...');
 let mainWindow;
 
 function sendStatusToWindow(text) {
-  console.log(text);
   mainWindow.webContents.send('message', text);
 }
 // Create the native browser window.
 function createWindow() {
   mainWindow = new BrowserWindow({
+    autoHideMenuBar: true,
+    minHeight: 600,
+    minWidth: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  mainWindow.webContents.openDevTools();
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -40,15 +45,14 @@ function createWindow() {
   // In development, set it to localhost to allow live/hot-reloading.
   const appURL = app.isPackaged
     ? url.format({
-      pathname: path.join(__dirname, `index.html`),
-      protocol: "file:",
-      slashes: true,
-    })
-    : "http://localhost:3000";
-  console.log(appURL, '<=======')
+        pathname: path.join(__dirname, `index.html`),
+        protocol: 'file:',
+        slashes: true,
+      })
+    : 'http://localhost:3000';
+  console.log(appURL, '<=======');
   mainWindow.loadURL(appURL);
   mainWindow.webContents.openDevTools();
-
 
   // Automatically open Chrome's DevTools in development mode.
   if (!app.isPackaged) {
@@ -75,25 +79,34 @@ function createWindow() {
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
   mainWindow.webContents.send('checking-for-update', true);
-})
+});
 autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('Update available.');
   mainWindow.webContents.send('is-update-available', true);
-})
+});
 autoUpdater.on('update-not-available', (info) => {
   sendStatusToWindow('Update not available.');
   mainWindow.webContents.send('is-update-available', false);
-})
+});
 autoUpdater.on('error', (err) => {
   sendStatusToWindow('Error in auto-updater. ' + err);
-})
+});
 autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  log_message =
+    log_message +
+    ' (' +
+    progressObj.transferred +
+    '/' +
+    progressObj.total +
+    ')';
   sendStatusToWindow(log_message);
-  mainWindow.webContents.send('download-progress', Math.trunc(progressObj.percent));
-})
+  mainWindow.webContents.send(
+    'download-progress',
+    Math.trunc(progressObj.percent),
+  );
+});
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded, please restart the app');
   mainWindow.webContents.send('is-download-complete', true);
@@ -101,15 +114,15 @@ autoUpdater.on('update-downloaded', (info) => {
 // This method will be called when Electron has finished its initialization and
 // is ready to create the browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function () {
+app.on('ready', function() {
   createWindow();
 });
 
 // Quit when all windows are closed, except on macOS.
 // There, it's common for applications and their menu bar to stay active until
 // the user quits  explicitly with Cmd + Q.
-app.on("window-all-closed", function () {
-  if (process.platform !== "darwin") {
+app.on('window-all-closed', function() {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
 });
@@ -125,15 +138,26 @@ app.on("window-all-closed", function () {
 // app quits.
 //-------------------------------------------------------------------
 
+function checkForUpdates() {
+  autoUpdater.checkForUpdatesAndNotify();
+  mainWindow.webContents.send('update-app', true);
+}
 
-app.on('ready', function () {
+app.on('ready', function() {
   autoUpdater.setFeedURL({
     provider: 'github',
-    owner: 'mr339',
-    repo: 'walletWork',
-    token: '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',
+    owner: process.env.ELECTRON_OWNER,
+    repo: process.env.ELECTRON_REPO,
+    token: process.env.ELECTRON_TOKEN,
   });
-  autoUpdater.checkForUpdatesAndNotify();
+  checkForUpdates();
+  setTimeout(() => {
+    mainWindow.webContents.send('update-app', true);
+  }, 1000);
+});
+
+ipcMain.on('check-updates', () => {
+  checkForUpdates();
 });
 
 //-------------------------------------------------------------------
@@ -161,9 +185,8 @@ app.on('ready', function () {
 // autoUpdater.on('download-progress', (progressObj) => {
 // })
 // autoUpdater.on('update-downloaded', (info) => {
-//   autoUpdater.quitAndInstall();  
+//   autoUpdater.quitAndInstall();
 // })
-
 
 // If your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,
