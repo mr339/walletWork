@@ -7,7 +7,7 @@ const UpdateModal = () => {
   const navigate = useNavigate();
   const [checkingUpdate, setCheckingUpdate] = useState(false);
   const [updateAvailable, setUpdateAvailable] = useState(false);
-  const [updateUnavailable, setUpdateUnavailable] = useState(false);
+  const [updateUnavailable, setUpdateUnavailable] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
   const [updateComplete, setUpdateComplete] = useState(false);
@@ -37,7 +37,6 @@ const UpdateModal = () => {
     })
     window.electronApi.on('update-downloaded', (data: boolean) => {
       setIsUpdating(false);
-      setIsUpdating(false);
       setUpdateComplete(data[0]);
     })
   }
@@ -52,7 +51,7 @@ const UpdateModal = () => {
       <img src={Logo} alt="Avalon Launcher" className="logo" />
       {checkingUpdate && <h5>Checking for Updates</h5>}
       {updateAvailable && <h5>Update Available. Your app update will begin shortly</h5>}
-      {(updateUnavailable || !updateUnavailable) && (
+      {(updateUnavailable) && (
         <>
           <h5>Update Not Available</h5>
           <p className='link' onClick={() => navigate(-1)}>Go back</p>

@@ -4,6 +4,7 @@ const path = require('path');
 const url = require('url');
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
+const {spawn} = require('child_process');
 
 process.env.ELECTRON_OWNER = 'mr339';
 process.env.ELECTRON_REPO = 'walletWork';
@@ -160,6 +161,13 @@ ipcMain.on('check-updates', () => {
   checkForUpdates();
 });
 
+ipcMain.on('open-notepad', () => {
+  if (process.platform === 'darwin') {
+    mainWindow.loadURL("notes://run");
+  } else {
+    spawn('notepad.exe');
+  } 
+});
 //-------------------------------------------------------------------
 // Auto updates - Option 2 - More control
 //

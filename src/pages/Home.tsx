@@ -16,7 +16,12 @@ const Home = () => {
   // },[]);
 
   const handleClick = () => {
-    window.location.href = "steam://run/1325860"
+    try {
+      // Open Notepad
+      window.electronApi.send('open-notepad');
+    } catch (e) {
+      console.log(e.message)
+    }
   }
   return (
     <>
@@ -26,7 +31,7 @@ const Home = () => {
           <img src={Logo} alt="Avalon Launcher" className="logo" />
           <div className="home-content">
             <button className="login-btn" onClick={handleClick}>
-              Open VTube Studio
+              Open Notes
             </button>
           </div>
         </div>
