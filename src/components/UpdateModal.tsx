@@ -7,7 +7,7 @@ const UpdateModal = () => {
   const navigate = useNavigate();
   const [checkingUpdate, setCheckingUpdate] = useState(false);
   const [updateAvailable, setUpdateAvailable] = useState(false);
-  const [updateUnavailable, setUpdateUnavailable] = useState(true);
+  const [updateUnavailable, setUpdateUnavailable] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
   const [updateComplete, setUpdateComplete] = useState(false);
@@ -15,15 +15,18 @@ const UpdateModal = () => {
 
   const checkUpdates = () => {
     window.electronApi.on('checking-for-update', (data: boolean) => {
+      console.log('udates', data[0])
       setCheckingUpdate(data[0]);
     })
   }
 
   const checkUpdateAvailability = () => {
     window.electronApi.on('is-update-available', (data: boolean) => {
+      console.log('udpate available', data[0])
       setUpdateAvailable(data[0]);
       setCheckingUpdate(false);
-      if (!data[0]){
+      if (!data[0]) {
+        console.log('not ehre')
         setUpdateUnavailable(true);
       }
     })
@@ -31,11 +34,14 @@ const UpdateModal = () => {
 
   const trackUpdateProgress = () => {
     window.electronApi.on('download-progress', (data: number) => {
+      console.log('download progress', data[0])
       setIsUpdating(true);
       setUpdateAvailable(false);
       setUpdateProgress(data[0]);
     })
     window.electronApi.on('update-downloaded', (data: boolean) => {
+      console.log('download ggggggg', data[0])
+
       setIsUpdating(false);
       setUpdateComplete(data[0]);
     })

@@ -4,7 +4,7 @@ const path = require('path');
 const url = require('url');
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
-const {spawn} = require('child_process');
+const { spawn } = require('child_process');
 
 process.env.ELECTRON_OWNER = 'mr339';
 process.env.ELECTRON_REPO = 'walletWork';
@@ -46,10 +46,10 @@ function createWindow() {
   // In development, set it to localhost to allow live/hot-reloading.
   const appURL = app.isPackaged
     ? url.format({
-        pathname: path.join(__dirname, `index.html`),
-        protocol: 'file:',
-        slashes: true,
-      })
+      pathname: path.join(__dirname, `index.html`),
+      protocol: 'file:',
+      slashes: true,
+    })
     : 'http://localhost:3000';
   console.log(appURL, '<=======');
   mainWindow.loadURL(appURL);
@@ -115,14 +115,14 @@ autoUpdater.on('update-downloaded', (info) => {
 // This method will be called when Electron has finished its initialization and
 // is ready to create the browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', function() {
+app.on('ready', function () {
   createWindow();
 });
 
 // Quit when all windows are closed, except on macOS.
 // There, it's common for applications and their menu bar to stay active until
 // the user quits  explicitly with Cmd + Q.
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -144,7 +144,7 @@ function checkForUpdates() {
   mainWindow.webContents.send('update-app', true);
 }
 
-app.on('ready', function() {
+app.on('ready', function () {
   autoUpdater.setFeedURL({
     provider: 'github',
     owner: process.env.ELECTRON_OWNER,
@@ -166,7 +166,7 @@ ipcMain.on('open-notepad', () => {
     mainWindow.loadURL("notes://run");
   } else {
     spawn('notepad.exe');
-  } 
+  }
 });
 //-------------------------------------------------------------------
 // Auto updates - Option 2 - More control
